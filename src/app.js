@@ -5,7 +5,7 @@ const { sequelize } = require('./models');
 const noteRoutes = require('./routes/noteRoutes');
 const mockAuth = require('./middlewares/mockAuth');
 
-const app = (express.json());
+const app = express();
 
 // Middleware
 app.use(express.json());

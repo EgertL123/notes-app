@@ -1,5 +1,23 @@
 const noteService = require('../services/noteService');
 
+exports.createNote = async (req, res, next) => {
+    try {
+        const note = await noteService.createNote(req.body, req.user);
+        res.status(201).json(note.toJSON());
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.getNotes = async (req, res, next) => {
+    try {
+        const notes = await noteService.getNotes(req.user);
+        res.json(notes.map(note => note.toJSON()));
+    } catch (err) {
+        next(err);
+    }
+};
+
 exports.deleteNote = async (req, res, next) => {
     try {
         await noteService.deleteNote(req.params.id, req.user);
