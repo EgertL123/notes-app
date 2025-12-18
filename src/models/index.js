@@ -1,10 +1,15 @@
+const Sequelize = require('sequelize');
 const sequelize = require('../config/database');
-const { DataTypes } = require('sequelize');
 
-const User = require('./user')(sequelize, DataTypes);
-const Note = require('./note')(sequelize, DataTypes);
+const User = require('./user')(sequelize, Sequelize.DataTypes);
+const Note = require('./note')(sequelize, Sequelize.DataTypes);
 
-User.hasMany(Note);
-Note.belongsTo(User);
+// 🔴 SEE OSA PEAB OLEMA
+User.hasMany(Note, { foreignKey: 'userId' });
+Note.belongsTo(User, { foreignKey: 'userId' });
 
-module.exports = { sequelize, User, Note };
+module.exports = {
+  sequelize,
+  User,
+  Note
+};

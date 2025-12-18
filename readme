@@ -1,0 +1,88 @@
+# Notes App – Meeskonnaprojekt
+
+## Projekti ülevaade
+Notes App on lihtne, kuid realistlik 3-kihiline veebirakendus, mis võimaldab kasutajatel luua, vaadata ja kustutada märkmeid.  
+Projekt on loodud eesmärgiga demonstreerida korrektset MVC-arhitektuuri, ORM-i kasutust, Repository mustrit ning äriloogika eraldamist.
+
+Rakendus kasutab mockitud autentimist (kasutaja ID ja roll), et keskenduda arhitektuurile ja ärireeglitele.
+
+---
+
+## Eesmärk ja ulatus
+- 3-kihiline arhitektuur (Controller → Service → Repository)
+- Vähemalt 2 seotud andmemudelit (User ja Note)
+- CRUD operatsioonid märkmete jaoks
+- Ärireegel: kasutaja saab kustutada ainult enda märkmeid (admin saab kõiki)
+- Mockitud rolli-/õiguste mudel
+
+---
+
+## Kasutatud tehnoloogiad
+- **Node.js**
+- **Express**
+- **Sequelize ORM**
+- **SQLite** (arenduskeskkonnas)
+- **Jest** (unit testid)
+- **Supertest** (integratsioonitestid)
+
+---
+
+## Arhitektuur (MVC)
+
+### Model
+- Sequelize ORM mudelid: `User`, `Note`
+- Seos:  
+  - **User 1 → N Note**
+
+### View
+- Lihtne HTML/CSS/JavaScript frontend (`public/` kaust)
+- Suhtleb backendiga REST API kaudu
+
+### Controller
+- Vastutab HTTP-päringute ja vastuste eest
+- Ei sisalda äriloogikat
+
+### Service
+- Sisaldab ärireegleid ja valideerimist
+- Ei sõltu HTTP ega Expressi detailidest
+
+### Repository
+- Vastutab andmebaasi päringute eest
+- Service kiht kasutab ainult Repository meetodeid
+
+---
+
+## Andmemudel
+
+### User
+- id
+- email (mock loginiga mittekohustuslik)
+- role (USER / ADMIN)
+
+### Note
+- id
+- title
+- content
+- userId (foreign key → User)
+
+**Seos:**  
+User (1) ─── (N) Note
+
+---
+
+## Ärireeglid
+- Kasutaja saab kustutada ainult enda märkmeid
+- Admin-rolliga kasutaja saab kustutada kõiki märkmeid
+- Märkme loomisel peab olema pealkiri ja sisu
+
+---
+
+## API kirjeldus
+
+| Meetod | Endpoint | Kirjeldus |
+|------|--------|---------|
+| GET | /api/notes | Tagastab kasutaja märkmed |
+| POST | /api/notes | Loob uue märkme |
+| DELETE | /api/notes/:id | Kustutab märkme |
+
+### Headerid (mock auth)
