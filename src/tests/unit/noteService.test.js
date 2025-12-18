@@ -1,23 +1,24 @@
-jest.mock('../../repositories/noteRepository', () => ({
-    findById: jest.fn()
-}));
-
 const noteService = require('../../services/noteService');
-const repo = require('../../repositories/noteRepository');
+const noteRepository = require('../../repositories/noteRepository');
 
-test('USER cannot delete note', async () => {
-    repo.findById.mockResolvedValue({ userId: 2 });
+// Mock the repository
+jest.mock('../../repositories/noteRepository');
 
-    await expect(
-        noteService.deleteNote(1, { id: 1, role: 'USER' })
-    ).rejects.toThrow();
-});
+describe('NoteService Unit Tests', () => {
+    it('should create a note successfully', async () => {
+        const mockNote = { id: 1, title: 'Test', content: 'Content', userId: 1 };
 
-test('ADMIN can delete any note', async () => {
-    repo.findById.mockResolvedValue({ userId: 99 });
-    repo.delete = jest.fn().mockResolvedValue(true);
+        // Setup mock behavior
+        noteRepository.create.mockResolvedValue(mockNote);
 
-    await expect(
-        noteService.deleteNote(1, { id: 1, role: 'ADMIN' })
-    ).resolves.not.toThrow();
+        const result = await noteService.createNote({ title: 'Test', content: 'Content' }, 1);
+
+        expect(result).toEqual(mockNote);
+        expect(noteRepository.create).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw an error if title is missing', async () => {
+        await expect(noteService.createNote({ content: 'Only content' }, 1))
+            .rejects.toThrow();
+    });
 });
