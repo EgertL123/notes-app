@@ -9,8 +9,6 @@ class NoteService {
             err.status = 401;
             throw err;
         }
-
-        // 🔴 KRIITILINE OSA – loo User, kui teda pole
         let dbUser = await userRepository.findById(user.id);
 
         if (!dbUser) {
@@ -41,6 +39,15 @@ class NoteService {
         }
 
         return noteRepository.delete(note);
+    }
+
+    async updateNote(id, userId, data) {
+        const note = await noteRepository.findById(id);
+
+        if (!note) throw new Error('Note not found');
+        if (note.userId !== userId) throw new Error('Unauthorized');
+
+        return await noteRepository.update(id, data);
     }
 }
 

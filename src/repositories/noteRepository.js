@@ -1,20 +1,31 @@
-const { Note } = require('../models');
+const { Note, User } = require('../models');
 
 class NoteRepository {
-    create(data) {
-        return Note.create(data);
+    async create(data) {
+        return await Note.create(data);
     }
 
-    findById(id) {
-        return Note.findByPk(id);
+    async findById(id) {
+        return await Note.findByPk(id);
     }
 
-    findAll() {
-        return Note.findAll();
+    async findAll(options = {}) {
+        return await Note.findAll({
+            ...options,
+            include: [{ model: User, attributes: ['email'] }]
+        });
     }
 
-    delete(note) {
-        return note.destroy();
+    async update(id, data) {
+        const note = await Note.findByPk(id);
+        if (note) {
+            return await note.update(data);
+        }
+        return null;
+    }
+
+    async delete(note) {
+        return await note.destroy();
     }
 }
 

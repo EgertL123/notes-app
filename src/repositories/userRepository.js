@@ -1,12 +1,18 @@
 const { User } = require('../models');
 
 class UserRepository {
-    findById(id) {
-        return User.findByPk(id);
+    async findByEmail(email) {
+        return await User.findOne({
+            where: { email: email }
+        });
     }
 
-    create(user) {
-        return User.create(user);
+    async create(userData) {
+        return await User.create(userData);
+    }
+
+    async findById(id) {
+        return await User.findByPk(id);
     }
 }
 

@@ -2,11 +2,16 @@ module.exports = (sequelize, DataTypes) => {
     return sequelize.define('User', {
         email: {
             type: DataTypes.STRING,
-            allowNull: true   // 👈 MUUTUS
+            unique: true,
+            allowNull: false
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false
         },
         role: {
             type: DataTypes.STRING,
-            allowNull: false
+            defaultValue: 'USER'
         }
     });
 };
