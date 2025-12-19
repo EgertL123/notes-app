@@ -30,7 +30,10 @@ exports.deleteNote = async (req, res, next) => {
 exports.updateNote = async (req, res, next) => {
     try {
         const note = await noteService.updateNote(req.params.id, req.user.id, req.body);
-        res.status(200).json(note);
+        if (!note) {
+            return res.status(404).json({ message: 'Note not found' });
+        }
+        res.status(200).json(note.toJSON ? note.toJSON() : note);
     } catch (err) {
         next(err);
     }
