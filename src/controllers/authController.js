@@ -11,7 +11,7 @@ exports.signup = async (req, res, next) => {
 
         const user = await authService.signup(email, password);
         res.status(201).json({
-            message: 'Kasutaja loodud!',
+            message: 'User created!',
             userId: user.id
         });
     } catch (err) {
